@@ -4,11 +4,22 @@ import sys
 import math
 import materials
 import laby
+from musicmanager import MusicManager
+
+pausemusic = MusicManager("pause.mp3")
+
+
+music = MusicManager("music.mp3")
+
+gmusic = MusicManager("wing.mp3")
+
+startmusic = MusicManager("win.mp3")
 
 fullscreen = False
 options = [10,10]
 
 def pausemenu(win,fullscreen):
+    pausemusic.play_music()
     while True:
         pygame.mouse.set_visible(True)
         win.fill((0, 0, 0))
@@ -70,11 +81,13 @@ def pausemenu(win,fullscreen):
                     mainloop(win, screenwidth, screenheight,fullscreen)
                     break
                 if homebtn_rect.collidepoint(pygame.mouse.get_pos(event.pos)):
+                    pausemusic.stop_music()
                     startmenu(win, win.get_width(), win.get_height(),fullscreen)
                 if quitbtn_rect.collidepoint(pygame.mouse.get_pos(event.pos)):
                     pygame.quit()
                     sys.exit(0)
                 if resumebtn_rect.collidepoint(pygame.mouse.get_pos(event.pos)):
+                    pausemusic.stop_music()
                     return
                 if fullscreenbtn_rect.collidepoint(pygame.mouse.get_pos(event.pos)):
                     if fullscreen == False:
@@ -83,6 +96,7 @@ def pausemenu(win,fullscreen):
 
 
 def mainloop(win,screenheight,screenwidth,fullscreen):
+    music.play_music()
     finalmaze = laby.Maze(options[0])
     finalmaze.genWithGrid()
     finalmaze.sortie()
@@ -161,6 +175,16 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
             start_angle += difangle
     forward = True
     while True:
+        if music.is_playing() == False:
+            try:
+                music.resume_music()
+            except Exception:
+                print(Exception)
+            try:
+                music.resume_music()
+            except Exception:
+                print(Exception)
+
         if ((chrono[3]+5)  > 100):
             chrono[3] = 0
             if chrono[2] > 59:
@@ -199,6 +223,7 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
         if MAP[square] == endmaze:
             if collectible.collected == 10:
                 print("win !")
+                music.stop_music()
                 gamewin(win, screenwidth, screenheight, (chrono[0], chrono[1], chrono[2], chrono[3]),fullscreen)
                 endmaze.end(pygame, win,screenwidth,screenheight)
                 break
@@ -236,7 +261,10 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
         if keys[pygame.K_t] and keys[pygame.K_LCTRL]:
             displayinfo=False
         if keys[pygame.K_ESCAPE]:
+            music.pause_music()
             pausemenu(win,fullscreen)
+            music.play_music()
+
 
 
         clock.tick(20)
@@ -285,6 +313,7 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
         pygame.display.flip()
 
 def startmenu(win,screenwidth,screenheight,fullscreen):
+    startmusic.play_music()
     while True:
         pygame.mouse.set_visible(True)
         win.blit(pygame.transform.scale(pygame.image.load("./background.png"), (win.get_width(), win.get_height())), (0, 0))
@@ -329,6 +358,7 @@ def startmenu(win,screenwidth,screenheight,fullscreen):
                 sys.exit(0)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if playbtn_rect.collidepoint(pygame.mouse.get_pos(event.pos)):
+                    startmusic.stop_music()
                     mainloop(win, screenwidth, screenheight,fullscreen)
                     break
                 if quitbtn_rect.collidepoint(pygame.mouse.get_pos(event.pos)):
@@ -340,6 +370,7 @@ def startmenu(win,screenwidth,screenheight,fullscreen):
                         win = pygame.display.set_mode((screenwidth, screenheight), pygame.FULLSCREEN)
 
 def gamewin(win,screenwidth,screenheight, chrono,fullscreen):
+    gmusic.play_music()
     while True:
         win.fill((0, 0, 0))
         win.blit(pygame.transform.scale(pygame.image.load("./background.png"), (win.get_width(), win.get_height())), (0, 0))
