@@ -1,11 +1,11 @@
 import random
 class Maze:
-    def __init__(self):
+    def __init__(self,s):
         self.wall = '#'
         self.cell = ' '
         self.unvisited = 'u'
-        self.height = 10
-        self.width = 10
+        self.height = s
+        self.width = s
         self.maze = []
         self.c=['0','1','2','3','4','5','6','7','8','9']
         self.cc=[0,1,2,3,4,5,6,7,8,9]
