@@ -1,5 +1,8 @@
 import random
 class Maze:
+    """
+    class servant à la génération du labyrinth
+    """
     def __init__(self,s):
         self.wall = '#'
         self.cell = ' '
@@ -10,7 +13,7 @@ class Maze:
         self.c=['0','1','2','3','4','5','6','7','8','9']
         self.cc=[0,1,2,3,4,5,6,7,8,9]
 
-    def genWithGrid(self):
+    def genrandomly(self):
         for i in range(0, self.height):
             line = []
             for j in range(0, self.width):

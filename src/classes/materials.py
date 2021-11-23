@@ -1,5 +1,8 @@
 import pygame
 class Material:
+    """
+    class pour géréer les matériaux du labyrinthe et leur couleur
+    """
     def __init__(self,char,color):
         self.char = char
         self.color = color
@@ -30,6 +33,9 @@ class Material:
         game.quit()
 
 class Collectibles(Material):
+    """
+    gère les collectibles du labyrinthe
+    """
     def __init__(self,char,color):
         super().__init__(char,color)
         self.type="collectible"

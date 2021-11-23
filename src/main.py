@@ -18,6 +18,9 @@ fullscreen = False
 options = [10,10]
 
 def pausemenu(win,fullscreen):
+    """
+    Menu pause (quand la touche échap est pressée pendant le jeu)
+    """
     pausemusic.play_music()
     while True:
         pygame.mouse.set_visible(True)
@@ -70,7 +73,7 @@ def pausemenu(win,fullscreen):
 
         keys = pygame.key.get_pressed()
 
-
+        # vérifie les boutons pressés
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -95,15 +98,27 @@ def pausemenu(win,fullscreen):
 
 
 def mainloop(win,screenheight,screenwidth,fullscreen):
+    """
+    Boucle principale du jeu
+    :param win:
+    :param screenheight:
+    :param screenwidth:
+    :param fullscreen:
+    :return: game
+    """
+    #joue la musique du jeu
     music.play_music()
+    #génère le niveau
     finalmaze = laby.Maze(options[0])
-    finalmaze.genWithGrid()
+    finalmaze.genrandomly()
     finalmaze.sortie()
     finalmaze.collectibles()
     finalmaze.convert_str()
+    #créer les materiaux
     wallsmaze = materials.Material("#", (210, 118, 31))
     endmaze = materials.Material("$", (183, 109, 40))
     collectible = materials.Collectibles("*", (255, 255, 255))
+    #les constantes du jeu
     player_x = ((screenheight / 2) / 40)*((18*2)-1)
     player_y = ((screenwidth / 2) / 40)*((18*2)-1)
     player_angle = math.pi
@@ -124,6 +139,7 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
     displayinfo = False
     chrono = [0,0,0,0]
     def cast_rays():
+        #fonction pour calculer les rayons et faire le rendu
         start_angle = player_angle - hfov
         for ray in range(nbofrays):
             for depth in range(mdeth):
@@ -135,12 +151,14 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
                 if MAP[square] == wallsmaze or MAP[square] == endmaze or MAP[square] in collectible.c:
                     if MAP[square] == wallsmaze:
                         wallhit = wallsmaze
+                        #set color from wall
                         colorR = wallhit.color[0] / (1 + depth * depth * 0.0001)
                         colorG = wallhit.color[1] / (1 + depth * depth * 0.0001)
                         colorB = wallhit.color[2] / (1 + depth * depth * 0.0001)
                         depth *= math.cos(player_angle - start_angle)
                         wall_height = 21000 / (depth + 0.0001)
                         if wall_height > screenheight: wall_height = screenheight
+                        #display wall
                         pygame.draw.rect(win, (colorR, colorG, colorB), (1 + ray * scale,(screenheight / 2) - wall_height / 2,scale, wall_height))
                         break
                     elif MAP[square] == endmaze:
@@ -174,6 +192,7 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
             start_angle += difangle
     forward = True
     while True:
+        #check music statut
         if music.is_playing() == False:
             try:
                 music.resume_music()
@@ -183,7 +202,7 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
                 music.resume_music()
             except Exception:
                 print(Exception)
-
+        #gestion du chrono
         if ((chrono[3]+5)  > 100):
             chrono[3] = 0
             if chrono[2] > 59:
@@ -204,7 +223,7 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
         nbofrays = int(screenwidth / 4)
         difangle = fov / nbofrays
         scale = (screenwidth) / nbofrays
-
+        #gère les events pygame
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -212,6 +231,7 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
         col = int(player_x / csize)
         row = int(player_y / csize)
         square = row * msize + col
+        #gère les colisions
         if (MAP[square] == wallsmaze):
             if forward:
                 player_x -= -math.sin(player_angle) * 7
@@ -233,6 +253,7 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
                 else:
                     player_x += -math.sin(player_angle) * 7
                     player_y += math.cos(player_angle) * 7
+        #gère les collectibles
         if MAP[square] in collectible.c:
             collectible.collect(MAP[square])
         pygame.draw.rect(win, (0, 0, 0), (0, 0, screenwidth, screenheight))
@@ -240,6 +261,7 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
         pygame.draw.rect(win, (0, 255, 201), (0, -screenheight / 2, screenwidth, screenheight))
         cast_rays()
 
+        #gère les déplacements et les touches
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]or keys[pygame.K_q]: player_angle -= 0.15
         if keys[pygame.K_RIGHT] or keys[pygame.K_d] : player_angle += 0.15
@@ -266,7 +288,7 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
 
 
 
-
+        #nb de tick par secondes
         clock.tick(20)
         font = pygame.font.SysFont('Monospace Regular', 30)
 
@@ -290,6 +312,7 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
             ms="0"+str(ms)
         else:
             ms=str(ms)
+        #affichages des informations
         if displayinfo:
             pchonom = m + " : "+ s + " : "+ ms
             pchonom_surface = font.render(pchonom, False, (255, 255, 255))
@@ -312,6 +335,7 @@ def mainloop(win,screenheight,screenwidth,fullscreen):
             win.blit(pchonom_surface, (10, 30))
         pygame.display.flip()
 
+#menu de démarage
 def startmenu(win,screenwidth,screenheight,fullscreen):
     startmusic.play_music()
     while True:
@@ -369,6 +393,7 @@ def startmenu(win,screenwidth,screenheight,fullscreen):
                         fullscreen = True
                         win = pygame.display.set_mode((screenwidth, screenheight), pygame.FULLSCREEN)
 
+#menu de partie gagnée
 def gamewin(win,screenwidth,screenheight, chrono,fullscreen):
     gmusic.play_music()
     while True:
@@ -438,11 +463,12 @@ def gamewin(win,screenwidth,screenheight, chrono,fullscreen):
 
         pygame.display.flip()
 
+#initialisation du jeu
 pygame.init()
 screenheight = 648
 screenwidth = screenheight * 2
 win = pygame.display.set_mode((screenwidth, screenheight), pygame.NOFRAME)
-
+#démarage du jeu
 startmenu(win,screenwidth,screenheight,fullscreen)
 
 

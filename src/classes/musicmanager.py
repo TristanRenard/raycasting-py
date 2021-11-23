@@ -1,6 +1,9 @@
 import pygame
 
 class MusicManager:
+    """
+    class servant à la gestion de la musique en jeu
+    """
     def __init__(self,music_path):
         pygame.mixer.init()
         self.music_path = music_path
