@@ -12,12 +12,13 @@ La consigne était d'utiliser la librairie pygame pour créer un jeu en mettant 
 
 ## 1. Installation
 
+Ouvrez CMD a l'endroit ou vous voulez installer le projet.
+
 ```
-pip install ultimaze
 python main.py
 ```
-Ou utlisé l'installer dans /dist/ultimaze.exe
-Puis exécutez l'installer
+~~Ou utlisé l'installer dans /dist/ultimaze.exe
+Puis exécutez l'installer~~  `Cette méthode n'est plus possible !`
 
 ## 2. Utilisation
 ![main menu](./screen/main-menu.png)
@@ -26,9 +27,9 @@ Quand vous êtes prêt, appuyez sur "Play" pour commencer le jeu.
 
 Devez collecter toutes les murs multicolorts **en marchant dessus** avant de trouver la sortie (attention elle est discrète).
 
-Utilisez les flèches directionnelles ou ZQSD pour vous déplacer.
+Utilisez les **flèches directionnelles** ou **ZQSD** pour vous déplacer.
 
-Vous pouvez aussi mettre pause en appuyant sur "Echap".
+Vous pouvez aussi mettre pause en appuyant sur **Echap**.
 
 ![echap menu](./screen/echap-menu.png)
 
@@ -44,11 +45,20 @@ Il possède un taux d'erreur de génration (le labyrinth ne peut pas être fini)
 
 ## 4. Le raycasting
 
-Le raycasting est un algorithme de rendu de 2.5D.
+Le raycasting est un algorithme de rendu de 2.5D. *3D soon*
 Il est utilisé pour dessiner le labyrinthe.
 Il fonctionne en projetant des rayons contre les murs et en récupérant la longueur des rayons on sait quelle hauteur de pixel afficher.
 
 ![raycasting](./screen/raycast.png)
+
+## 5.Multi-joueur
+*Soon*
+
+## 6. 3 axes
+*Soon*
+
+## 7. Modèle 3D
+*Soon*
 
 ## Merci
 
