@@ -395,6 +395,9 @@ def startmenu(win,screenwidth,screenheight,fullscreen):
 
 #menu de partie gagnée
 def gamewin(win,screenwidth,screenheight, chrono,fullscreen):
+    # add discord Rich Presence
+    discord_rpc.update_presence(state="Win", details="Win", large_image="win", large_image_text="win", small_image="win", small_image_text="win")
+
     gmusic.play_music()
     while True:
         win.fill((0, 0, 0))
@@ -470,6 +473,4 @@ screenwidth = screenheight * 2
 win = pygame.display.set_mode((screenwidth, screenheight), pygame.NOFRAME)
 #démarage du jeu
 startmenu(win,screenwidth,screenheight,fullscreen)
-
-
 
